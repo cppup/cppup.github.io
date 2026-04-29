@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cppup's Homepage</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #faf8ef;
+      font-family: "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
+        "Microsoft YaHei", sans-serif;
+      color: #776e65;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px 24px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: #bbada0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      font-size: 42px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #f9a825;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: #8d8480;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .card-grid {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: #eee4da;
+      border-radius: 12px;
+      padding: 28px 32px;
+      flex: 1 1 200px;
+      max-width: 240px;
+      text-decoration: none;
+      color: #776e65;
+      transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px rgba(187, 173, 160, 0.25);
+    }
+
+    .card:hover {
+      background: #f9a825;
+      color: #fff;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(249, 168, 37, 0.3);
+    }
+
+    .card .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .card .label {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .card .desc {
+      font-size: 0.82rem;
+      margin-top: 6px;
+      opacity: 0.8;
+    }
+
+    footer {
+      font-size: 0.78rem;
+      color: #b5aca5;
+    }
+
+    footer a {
+      color: #b5aca5;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #f9a825;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="avatar">🧑‍💻</div>
+    <h1>Hi, I'm cppup 👋</h1>
+    <p class="subtitle">
+      欢迎来到我的主页！<br />
+      Welcome to my GitHub Pages site.
+    </p>
+
+    <div class="card-grid">
+      <a class="card" href="https://cppup.github.io/games/" target="_blank" rel="noopener">
+        <span class="icon">🎮</span>
+        <span class="label">2048 游戏</span>
+        <p class="desc">经典 2048，多种皮肤可选</p>
+      </a>
+      <a class="card" href="https://github.com/cppup" target="_blank" rel="noopener">
+        <span class="icon">💻</span>
+        <span class="label">GitHub</span>
+        <p class="desc">查看我的项目与代码</p>
+      </a>
+    </div>
+
+    <footer>
+      &copy; 2025 cppup &nbsp;·&nbsp;
+      <a href="https://github.com/cppup/cppup.github.io">Source</a>
+    </footer>
+  </div>
+</body>
+</html>
