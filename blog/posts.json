@@ -1,0 +1,23 @@
+[
+  {
+    "title": "Hello World — This Blog is Live",
+    "date": "2025-01-01",
+    "tags": ["meta", "intro"],
+    "desc": "First post. Setting up the terminal-themed homepage and game center.",
+    "url": "#"
+  },
+  {
+    "title": "Building 2048 in Vanilla JS",
+    "date": "2025-01-15",
+    "tags": ["javascript", "games"],
+    "desc": "How I ported 2048 to a terminal-themed single-file web app with theme switching.",
+    "url": "#"
+  },
+  {
+    "title": "Terminal Color Schemes for the Web",
+    "date": "2025-02-01",
+    "tags": ["css", "design"],
+    "desc": "Exploring VSCode, Dracula, Monokai, and Solarized color palettes in CSS.",
+    "url": "#"
+  }
+]

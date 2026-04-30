@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="vscode">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — cppup</title>
+<style>
+:root,[data-theme="vscode"]{
+  --bg:#1e1e1e;--panel:#252526;--panel2:#2d2d30;--border:#3c3c3c;
+  --text:#cccccc;--text-dim:#858585;--accent:#569cd6;--green:#4ec9b0;
+  --yellow:#dcdcaa;--orange:#ce9178;--red:#f44747;--purple:#c586c0;
+}
+[data-theme="dracula"]{
+  --bg:#282a36;--panel:#313442;--panel2:#44475a;--border:#6272a4;
+  --text:#f8f8f2;--text-dim:#6272a4;--accent:#bd93f9;--green:#50fa7b;
+  --yellow:#f1fa8c;--orange:#ffb86c;--red:#ff5555;--purple:#ff79c6;
+}
+[data-theme="monokai"]{
+  --bg:#272822;--panel:#2c2d26;--panel2:#3e3d32;--border:#75715e;
+  --text:#f8f8f2;--text-dim:#75715e;--accent:#66d9e8;--green:#a6e22e;
+  --yellow:#e6db74;--orange:#fd971f;--red:#f92672;--purple:#ae81ff;
+}
+[data-theme="solarized"]{
+  --bg:#002b36;--panel:#073642;--panel2:#0d3d4f;--border:#586e75;
+  --text:#839496;--text-dim:#586e75;--accent:#268bd2;--green:#859900;
+  --yellow:#b58900;--orange:#cb4b16;--red:#dc322f;--purple:#6c71c4;
+}
+[data-theme="light"]{
+  --bg:#fffdf7;--panel:#f5f2ec;--panel2:#ede9e0;--border:#d4cfc5;
+  --text:#3a3a3a;--text-dim:#8a8a8a;--accent:#0070c1;--green:#007f6e;
+  --yellow:#967a00;--orange:#8b4513;--red:#c00000;--purple:#7b3f9e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.6;
+  transition:background 0.25s ease,color 0.25s ease;min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;transition:color 0.25s ease,opacity 0.25s ease}
+a:hover{opacity:0.8}
+
+.topnav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:1rem;padding:0.75rem 1.5rem;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  transition:background 0.25s ease,border-color 0.25s ease;
+}
+.nav-brand{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.15rem;font-weight:700;color:var(--accent);white-space:nowrap;
+}
+.nav-brand .blink{animation:blink 1.1s step-end infinite;color:var(--green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:1.25rem;margin-left:auto}
+.nav-links a{color:var(--text-dim);font-size:0.9rem;transition:color 0.25s ease}
+.nav-links a:hover{color:var(--text)}
+.theme-switcher{display:flex;gap:0.4rem;margin-left:1rem}
+.theme-btn{
+  background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);
+  font-size:0.72rem;font-family:'JetBrains Mono','Cascadia Code',Consolas,monospace;
+  padding:0.2rem 0.45rem;border-radius:3px;cursor:pointer;transition:all 0.2s ease;line-height:1.4;
+}
+.theme-btn:hover{color:var(--text);border-color:var(--accent)}
+.theme-btn.active{color:var(--accent);border-color:var(--accent);background:var(--panel)}
+
+.container{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
+.back-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.85rem;color:var(--text-dim);margin-bottom:1.5rem;
+  border:1px solid var(--border);padding:0.3rem 0.75rem;border-radius:4px;transition:all 0.2s ease;
+}
+.back-link:hover{color:var(--accent);border-color:var(--accent);opacity:1}
+
+.page-header{margin-bottom:2rem}
+.page-title{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:2rem;font-weight:700;color:var(--accent);
+  border-left:3px solid var(--accent);padding-left:0.75rem;margin-bottom:0.4rem;
+}
+.page-sub{font-size:1rem;color:var(--text-dim);padding-left:calc(0.75rem + 3px)}
+
+/* Tag filter bar */
+.tag-filter{
+  display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;
+  align-items:center;
+}
+.filter-lbl{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.8rem;color:var(--text-dim);margin-right:0.25rem;
+}
+.filter-tag{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.78rem;padding:0.2rem 0.6rem;border-radius:4px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);
+  cursor:pointer;transition:all 0.2s ease;
+}
+.filter-tag:hover{color:var(--accent);border-color:var(--accent)}
+.filter-tag.active{color:var(--bg);background:var(--accent);border-color:var(--accent)}
+
+/* Blog list */
+.blog-list{display:grid;gap:1rem;margin-bottom:2rem}
+.blog-card{
+  display:block;
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;
+  padding:1.25rem;transition:all 0.2s ease;color:var(--text);
+}
+.blog-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  transform:translateY(-2px);opacity:1;
+}
+.blog-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.5rem}
+.blog-date{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.8rem;color:var(--text-dim);
+}
+.tag{
+  font-size:0.72rem;padding:0.1rem 0.45rem;border-radius:3px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--accent);
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+}
+.blog-title{font-size:1.1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem}
+.blog-desc{font-size:0.9rem;color:var(--text-dim)}
+.empty-msg{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  color:var(--text-dim);padding:2rem;
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;text-align:center;
+}
+
+/* Pagination */
+.pagination{display:flex;gap:0.5rem;justify-content:center;margin-top:1rem}
+.page-btn{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.85rem;
+  background:var(--panel);border:1px solid var(--border);color:var(--text-dim);
+  padding:0.35rem 0.75rem;border-radius:4px;cursor:pointer;transition:all 0.2s ease;
+}
+.page-btn:hover{color:var(--accent);border-color:var(--accent)}
+.page-btn.active{color:var(--bg);background:var(--accent);border-color:var(--accent)}
+.page-btn:disabled{opacity:0.35;cursor:default}
+
+footer{
+  margin-top:3rem;padding:1.5rem;
+  border-top:1px solid var(--border);text-align:center;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.8rem;color:var(--text-dim);
+}
+footer a{color:var(--accent)}
+
+@media(max-width:768px){
+  .nav-links{gap:0.75rem}
+  .theme-switcher{gap:0.25rem}
+  .topnav{flex-wrap:wrap;padding:0.6rem 1rem}
+  .nav-links{margin-left:0;order:3;width:100%}
+  .theme-switcher{margin-left:auto}
+}
+@media(max-width:480px){
+  .nav-links{display:none}
+  .container{padding:1.5rem 1rem}
+  .page-title{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/">cppup<span class="blink">_</span></a>
+  <div class="nav-links">
+    <a href="/#about">About</a>
+    <a href="/#blog">Blog</a>
+    <a href="/#games">Games</a>
+    <a href="https://github.com/cppup" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <div class="theme-switcher">
+    <button class="theme-btn" data-t="vscode" title="VSCode Dark">VS</button>
+    <button class="theme-btn" data-t="dracula" title="Dracula">Dr</button>
+    <button class="theme-btn" data-t="monokai" title="Monokai">Mo</button>
+    <button class="theme-btn" data-t="solarized" title="Solarized Dark">So</button>
+    <button class="theme-btn" data-t="light" title="Light">☀</button>
+  </div>
+</nav>
+
+<div class="container">
+  <a class="back-link" href="/">← Home</a>
+
+  <div class="page-header">
+    <div class="page-title"># Blog</div>
+    <div class="page-sub">Thoughts on programming, open source, and building things.</div>
+  </div>
+
+  <div class="tag-filter" id="tag-filter" style="display:none">
+    <span class="filter-lbl">filter:</span>
+  </div>
+
+  <div class="blog-list" id="blog-list">
+    <p class="empty-msg">// Loading posts…</p>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<footer>
+  © 2025 cppup ·
+  <a href="https://github.com/cppup/cppup.github.io" target="_blank" rel="noopener">Source</a>
+</footer>
+
+<script>
+// ── Theme ──────────────────────────────────────────────────────────────
+const THEME_KEY = 'cppup-theme';
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem(THEME_KEY, t);
+  document.querySelectorAll('.theme-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.t === t));
+}
+document.querySelectorAll('.theme-btn').forEach(b =>
+  b.addEventListener('click', () => applyTheme(b.dataset.t)));
+applyTheme(localStorage.getItem(THEME_KEY) || 'vscode');
+
+// ── Blog Logic ─────────────────────────────────────────────────────────
+const PAGE_SIZE = 10;
+let allPosts = [], filteredPosts = [], currentPage = 1, activeTag = null;
+
+const listEl   = document.getElementById('blog-list');
+const filterEl = document.getElementById('tag-filter');
+const pageEl   = document.getElementById('pagination');
+
+async function loadBlog() {
+  try {
+    const res = await fetch('/blog/posts.json');
+    if (!res.ok) throw new Error('not found');
+    allPosts = await res.json();
+    if (!allPosts.length) throw new Error('empty');
+
+    // Sort by date descending (YYYY-MM-DD format)
+    allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    buildTagFilter();
+    filteredPosts = [...allPosts];
+    renderPage();
+  } catch {
+    listEl.innerHTML = '<p class="empty-msg">// No posts yet. Stay tuned.</p>';
+  }
+}
+
+function buildTagFilter() {
+  const tags = new Set();
+  allPosts.forEach(p => (p.tags || []).forEach(t => tags.add(t)));
+  if (!tags.size) return;
+
+  filterEl.style.display = 'flex';
+  // "All" button
+  const allBtn = makeFilterBtn('all', 'all', true);
+  filterEl.appendChild(allBtn);
+  tags.forEach(tag => filterEl.appendChild(makeFilterBtn(tag, tag, false)));
+}
+
+function makeFilterBtn(tag, label, isActive) {
+  const btn = document.createElement('button');
+  btn.className = 'filter-tag' + (isActive ? ' active' : '');
+  btn.textContent = label;
+  btn.addEventListener('click', () => {
+    activeTag = tag === 'all' ? null : tag;
+    currentPage = 1;
+    filterEl.querySelectorAll('.filter-tag').forEach(b =>
+      b.classList.toggle('active', b.textContent === label));
+    filteredPosts = activeTag
+      ? allPosts.filter(p => (p.tags || []).includes(activeTag))
+      : [...allPosts];
+    renderPage();
+  });
+  return btn;
+}
+
+function renderPage() {
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page  = filteredPosts.slice(start, start + PAGE_SIZE);
+
+  if (!page.length) {
+    listEl.innerHTML = '<p class="empty-msg">// No posts match this filter.</p>';
+    pageEl.innerHTML = '';
+    return;
+  }
+
+  listEl.innerHTML = page.map(p => `
+    <a class="blog-card" href="${p.url || '#'}">
+      <div class="blog-meta">
+        <span class="blog-date">${p.date}</span>
+        ${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
+      </div>
+      <div class="blog-title">${p.title}</div>
+      <div class="blog-desc">${p.desc || ''}</div>
+    </a>`).join('');
+
+  // Pagination
+  const totalPages = Math.ceil(filteredPosts.length / PAGE_SIZE);
+  if (totalPages <= 1) { pageEl.innerHTML = ''; return; }
+
+  let html = '';
+  for (let i = 1; i <= totalPages; i++) {
+    html += `<button class="page-btn${i === currentPage ? ' active' : ''}" data-page="${i}">${i}</button>`;
+  }
+  pageEl.innerHTML = html;
+  pageEl.querySelectorAll('.page-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentPage = parseInt(btn.dataset.page, 10);
+      renderPage();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadBlog);
+</script>
+</body>
+</html>

@@ -1,147 +1,372 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en" data-theme="vscode">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>cppup's Homepage</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cppup — Programmer & Open Source Enthusiast</title>
+<style>
+/* ── Theme Variables ───────────────────────────────────────────────── */
+:root,[data-theme="vscode"]{
+  --bg:#1e1e1e;--panel:#252526;--panel2:#2d2d30;--border:#3c3c3c;
+  --text:#cccccc;--text-dim:#858585;--accent:#569cd6;--green:#4ec9b0;
+  --yellow:#dcdcaa;--orange:#ce9178;--red:#f44747;--purple:#c586c0;
+}
+[data-theme="dracula"]{
+  --bg:#282a36;--panel:#313442;--panel2:#44475a;--border:#6272a4;
+  --text:#f8f8f2;--text-dim:#6272a4;--accent:#bd93f9;--green:#50fa7b;
+  --yellow:#f1fa8c;--orange:#ffb86c;--red:#ff5555;--purple:#ff79c6;
+}
+[data-theme="monokai"]{
+  --bg:#272822;--panel:#2c2d26;--panel2:#3e3d32;--border:#75715e;
+  --text:#f8f8f2;--text-dim:#75715e;--accent:#66d9e8;--green:#a6e22e;
+  --yellow:#e6db74;--orange:#fd971f;--red:#f92672;--purple:#ae81ff;
+}
+[data-theme="solarized"]{
+  --bg:#002b36;--panel:#073642;--panel2:#0d3d4f;--border:#586e75;
+  --text:#839496;--text-dim:#586e75;--accent:#268bd2;--green:#859900;
+  --yellow:#b58900;--orange:#cb4b16;--red:#dc322f;--purple:#6c71c4;
+}
+[data-theme="light"]{
+  --bg:#fffdf7;--panel:#f5f2ec;--panel2:#ede9e0;--border:#d4cfc5;
+  --text:#3a3a3a;--text-dim:#8a8a8a;--accent:#0070c1;--green:#007f6e;
+  --yellow:#967a00;--orange:#8b4513;--red:#c00000;--purple:#7b3f9e;
+}
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #faf8ef;
-      font-family: "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
-        "Microsoft YaHei", sans-serif;
-      color: #776e65;
-    }
+/* ── Reset & Base ──────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.6;
+  transition:background 0.25s ease,color 0.25s ease;
+  min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;transition:color 0.25s ease,opacity 0.25s ease}
+a:hover{opacity:0.8}
+.mono{font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace}
 
-    .container {
-      text-align: center;
-      padding: 40px 24px;
-      max-width: 600px;
-      width: 100%;
-    }
+/* ── Topnav ────────────────────────────────────────────────────────── */
+.topnav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:1rem;
+  padding:0.75rem 1.5rem;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  transition:background 0.25s ease,border-color 0.25s ease;
+}
+.nav-brand{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.15rem;font-weight:700;color:var(--accent);white-space:nowrap;
+}
+.nav-brand .blink{animation:blink 1.1s step-end infinite;color:var(--green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:1.25rem;margin-left:auto}
+.nav-links a{color:var(--text-dim);font-size:0.9rem;transition:color 0.25s ease}
+.nav-links a:hover{color:var(--text)}
+.theme-switcher{display:flex;gap:0.4rem;margin-left:1rem}
+.theme-btn{
+  background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);
+  font-size:0.72rem;font-family:'JetBrains Mono','Cascadia Code',Consolas,monospace;
+  padding:0.2rem 0.45rem;border-radius:3px;cursor:pointer;
+  transition:all 0.2s ease;line-height:1.4;
+}
+.theme-btn:hover{color:var(--text);border-color:var(--accent)}
+.theme-btn.active{color:var(--accent);border-color:var(--accent);background:var(--panel)}
 
-    .avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      background: #bbada0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 28px;
-      font-size: 42px;
-    }
+/* ── Layout ────────────────────────────────────────────────────────── */
+.container{max-width:860px;margin:0 auto;padding:2rem 1.5rem}
 
-    h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #f9a825;
-      margin-bottom: 12px;
-      letter-spacing: 1px;
-    }
+/* ── Section Headers ───────────────────────────────────────────────── */
+.section-header{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.35rem;font-weight:700;color:var(--accent);
+  border-left:3px solid var(--accent);padding-left:0.75rem;
+  margin-bottom:1.5rem;
+}
+.section-header span{color:var(--text-dim);font-weight:400}
 
-    .subtitle {
-      font-size: 1.05rem;
-      color: #8d8480;
-      margin-bottom: 36px;
-      line-height: 1.7;
-    }
+/* ── Hero / About ──────────────────────────────────────────────────── */
+#about{
+  padding:3rem 0 2rem;
+  position:relative;overflow:hidden;
+}
+.hero-scanline{
+  pointer-events:none;position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    to bottom,transparent,transparent 2px,
+    rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px
+  );
+  z-index:0;
+}
+.hero-grid{
+  pointer-events:none;position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:40px 40px;opacity:0.07;z-index:0;
+}
+.hero-inner{position:relative;z-index:1}
+.hero-prompt{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.05rem;color:var(--text-dim);margin-bottom:1.5rem;
+  display:flex;align-items:center;gap:0.25rem;
+}
+.hero-prompt .ps1{color:var(--green)}
+.hero-prompt .cursor{
+  display:inline-block;width:0.55em;height:1.1em;
+  background:var(--accent);vertical-align:text-bottom;
+  animation:blink 1.1s step-end infinite;margin-left:0.1em;
+}
+.hero-card{
+  display:flex;align-items:center;gap:2rem;
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:2rem;transition:background 0.25s ease,border-color 0.25s ease;
+}
+.hero-avatar{
+  flex-shrink:0;width:100px;height:100px;
+  border-radius:50%;border:2px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;background:var(--panel2);
+  transition:border-color 0.25s ease;box-shadow:0 0 0 4px var(--panel2);
+}
+.hero-name{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:2rem;font-weight:700;color:var(--text);margin-bottom:0.4rem;
+}
+.hero-bio{font-size:1rem;color:var(--text-dim);margin-bottom:1rem;line-height:1.5}
+.hero-links{display:flex;gap:1rem;flex-wrap:wrap}
+.hero-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.85rem;color:var(--accent);
+  background:var(--panel2);border:1px solid var(--border);
+  padding:0.3rem 0.75rem;border-radius:4px;
+  transition:all 0.2s ease;
+}
+.hero-link:hover{border-color:var(--accent);opacity:1;box-shadow:0 0 8px rgba(86,156,214,0.2)}
 
-    .card-grid {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 40px;
-    }
+/* ── Blog Section ──────────────────────────────────────────────────── */
+#blog{padding:2rem 0}
+.blog-list{display:grid;gap:1rem;margin-bottom:1rem}
+.blog-card{
+  display:block;
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;
+  padding:1.1rem 1.25rem;
+  transition:all 0.2s ease;color:var(--text);
+}
+.blog-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 4px 16px rgba(0,0,0,0.3);
+  transform:translateY(-2px);opacity:1;
+}
+.blog-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:0.4rem}
+.blog-date{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.8rem;color:var(--text-dim);
+}
+.tag{
+  font-size:0.72rem;padding:0.1rem 0.45rem;border-radius:3px;
+  background:var(--panel2);border:1px solid var(--border);color:var(--accent);
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+}
+.blog-title{font-size:1.05rem;font-weight:600;color:var(--text);margin-bottom:0.3rem}
+.blog-desc{font-size:0.9rem;color:var(--text-dim)}
+.empty-msg{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  color:var(--text-dim);padding:1.5rem;
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;
+}
+.section-link{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.9rem;color:var(--accent);display:inline-block;margin-top:0.5rem;
+}
+.section-link:hover{text-decoration:underline;opacity:1}
 
-    .card {
-      background: #eee4da;
-      border-radius: 12px;
-      padding: 28px 32px;
-      flex: 1 1 200px;
-      max-width: 240px;
-      text-decoration: none;
-      color: #776e65;
-      transition: background 0.18s, transform 0.18s, box-shadow 0.18s;
-      box-shadow: 0 2px 8px rgba(187, 173, 160, 0.25);
-    }
+/* ── Games Section ─────────────────────────────────────────────────── */
+#games{padding:2rem 0}
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:1.25rem;
+}
+.game-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:8px;
+  padding:1.5rem;display:flex;flex-direction:column;align-items:flex-start;
+  transition:all 0.2s ease;
+}
+.game-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 6px 24px rgba(0,0,0,0.3);
+  transform:translateY(-3px);
+}
+.game-icon{font-size:2.2rem;margin-bottom:0.75rem}
+.game-title{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;
+}
+.game-desc{font-size:0.9rem;color:var(--text-dim);margin-bottom:1rem;flex:1}
+.play-btn{
+  display:inline-block;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.85rem;color:var(--bg);background:var(--accent);
+  border:none;padding:0.4rem 1rem;border-radius:4px;cursor:pointer;
+  text-decoration:none;transition:opacity 0.2s ease;font-weight:600;
+}
+.play-btn:hover{opacity:0.85}
 
-    .card:hover {
-      background: #f9a825;
-      color: #fff;
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(249, 168, 37, 0.3);
-    }
+/* ── Footer ────────────────────────────────────────────────────────── */
+footer{
+  margin-top:3rem;padding:1.5rem;
+  border-top:1px solid var(--border);text-align:center;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.8rem;color:var(--text-dim);
+  transition:border-color 0.25s ease;
+}
+footer a{color:var(--accent)}
 
-    .card .icon {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .card .label {
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .card .desc {
-      font-size: 0.82rem;
-      margin-top: 6px;
-      opacity: 0.8;
-    }
-
-    footer {
-      font-size: 0.78rem;
-      color: #b5aca5;
-    }
-
-    footer a {
-      color: #b5aca5;
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      color: #f9a825;
-    }
-  </style>
+/* ── Responsive ────────────────────────────────────────────────────── */
+@media(max-width:768px){
+  .hero-card{flex-direction:column;align-items:flex-start;gap:1.25rem}
+  .hero-avatar{width:72px;height:72px;font-size:2rem}
+  .hero-name{font-size:1.5rem}
+  .nav-links{gap:0.75rem}
+  .theme-switcher{gap:0.25rem}
+  .topnav{flex-wrap:wrap;padding:0.6rem 1rem}
+  .nav-links{margin-left:0;order:3;width:100%}
+  .theme-switcher{margin-left:auto}
+}
+@media(max-width:480px){
+  .nav-links{display:none}
+  .container{padding:1.5rem 1rem}
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="avatar">🧑‍💻</div>
-    <h1>Hi, I'm cppup 👋</h1>
-    <p class="subtitle">
-      欢迎来到我的主页！<br />
-      Welcome to my GitHub Pages site.
-    </p>
 
-    <div class="card-grid">
-      <a class="card" href="https://cppup.github.io/games/" target="_blank" rel="noopener">
-        <span class="icon">🎮</span>
-        <span class="label">2048 游戏</span>
-        <p class="desc">经典 2048，多种皮肤可选</p>
-      </a>
-      <a class="card" href="https://github.com/cppup" target="_blank" rel="noopener">
-        <span class="icon">💻</span>
-        <span class="label">GitHub</span>
-        <p class="desc">查看我的项目与代码</p>
-      </a>
-    </div>
-
-    <footer>
-      &copy; 2025 cppup &nbsp;·&nbsp;
-      <a href="https://github.com/cppup/cppup.github.io">Source</a>
-    </footer>
+<nav class="topnav">
+  <a class="nav-brand mono" href="/">cppup<span class="blink">_</span></a>
+  <div class="nav-links">
+    <a href="/#about">About</a>
+    <a href="/#blog">Blog</a>
+    <a href="/#games">Games</a>
+    <a href="https://github.com/cppup" target="_blank" rel="noopener">GitHub</a>
   </div>
+  <div class="theme-switcher">
+    <button class="theme-btn" data-t="vscode" title="VSCode Dark">VS</button>
+    <button class="theme-btn" data-t="dracula" title="Dracula">Dr</button>
+    <button class="theme-btn" data-t="monokai" title="Monokai">Mo</button>
+    <button class="theme-btn" data-t="solarized" title="Solarized Dark">So</button>
+    <button class="theme-btn" data-t="light" title="Light">☀</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- ── About / Hero ─────────────────────────────────────── -->
+  <section id="about">
+    <div class="hero-scanline"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-inner">
+      <div class="hero-prompt mono">
+        <span class="ps1">cppup@github:~$</span>
+        <span class="cursor"></span>
+      </div>
+      <div class="hero-card">
+        <div class="hero-avatar">🧑‍💻</div>
+        <div>
+          <div class="hero-name">cppup</div>
+          <div class="hero-bio">Programmer &amp; Open Source Enthusiast | C++ / Python / Web | Building things for fun 🛠️</div>
+          <div class="hero-links">
+            <a class="hero-link" href="https://github.com/cppup" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              GitHub
+            </a>
+            <a class="hero-link" href="https://github.com/cppup/cppup.github.io" target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/></svg>
+              Source
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Blog ─────────────────────────────────────────────── -->
+  <section id="blog">
+    <div class="section-header mono"># Blog</div>
+    <div class="blog-list" id="blog-list">
+      <p class="empty-msg">// Loading posts…</p>
+    </div>
+    <a class="section-link" href="/blog/">→ All posts</a>
+  </section>
+
+  <!-- ── Games ────────────────────────────────────────────── -->
+  <section id="games">
+    <div class="section-header mono"># Game Center</div>
+    <div class="games-grid">
+      <div class="game-card">
+        <div class="game-icon">🎮</div>
+        <div class="game-title">2048</div>
+        <div class="game-desc">Slide tiles, reach 2048</div>
+        <a class="play-btn" href="games/2048.html">▶ Play</a>
+      </div>
+      <div class="game-card">
+        <div class="game-icon">🏓</div>
+        <div class="game-title">Pong</div>
+        <div class="game-desc">Classic ping-pong vs AI</div>
+        <a class="play-btn" href="games/pong.html">▶ Play</a>
+      </div>
+      <div class="game-card">
+        <div class="game-icon">🐍</div>
+        <div class="game-title">Snake</div>
+        <div class="game-desc">Eat, grow, survive</div>
+        <a class="play-btn" href="games/snake.html">▶ Play</a>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  © 2025 cppup · Built with ❤️ and terminal themes ·
+  <a href="https://github.com/cppup/cppup.github.io" target="_blank" rel="noopener">Source</a>
+</footer>
+
+<script>
+// ── Theme management ──────────────────────────────────────────────────
+const THEME_KEY = 'cppup-theme';
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem(THEME_KEY, t);
+  document.querySelectorAll('.theme-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.t === t));
+}
+document.querySelectorAll('.theme-btn').forEach(b =>
+  b.addEventListener('click', () => applyTheme(b.dataset.t)));
+applyTheme(localStorage.getItem(THEME_KEY) || 'vscode');
+
+// ── Blog loading ──────────────────────────────────────────────────────
+async function loadBlog() {
+  const container = document.getElementById('blog-list');
+  try {
+    const res = await fetch('/blog/posts.json');
+    if (!res.ok) throw new Error('not found');
+    const posts = await res.json();
+    if (!posts.length) throw new Error('empty');
+    container.innerHTML = posts.slice(0, 3).map(p => `
+      <a class="blog-card" href="${p.url || '#'}">
+        <div class="blog-meta">
+          <span class="blog-date">${p.date}</span>
+          ${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}
+        </div>
+        <div class="blog-title">${p.title}</div>
+        <div class="blog-desc">${p.desc || ''}</div>
+      </a>`).join('');
+  } catch {
+    container.innerHTML = '<p class="empty-msg">// No posts yet. Stay tuned.</p>';
+  }
+}
+document.addEventListener('DOMContentLoaded', loadBlog);
+</script>
 </body>
 </html>

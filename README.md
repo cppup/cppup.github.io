@@ -1,23 +1,59 @@
 # cppup.github.io
 
-> 🌐 **主页地址**：https://cppup.github.io
+> 🌐 **Homepage**: https://cppup.github.io
 
-## 简介
+Terminal-themed personal homepage with responsive layout, 5 color schemes, blog section, and a built-in game center.
 
-这是 [@cppup](https://github.com/cppup) 的 GitHub Pages 个人主页，托管在 `cppup/cppup.github.io` 仓库中。
+## Structure
 
-## 内容
+```
+/
+├── index.html              # Homepage (about · blog preview · game center)
+├── blog/
+│   ├── index.html          # Full blog listing with tag filter
+│   └── posts.json          # Blog posts data (add your own entries here)
+├── games/
+│   ├── index.html          # Game Center hub
+│   ├── 2048.html           # 2048 — arrow keys / swipe, terminal colors
+│   ├── pong.html           # Pong — mouse / keyboard / touch vs AI
+│   └── snake.html          # Snake — WASD / arrows / swipe, speed ramp
+└── .github/workflows/
+    └── pages.yml           # Auto-deploy to GitHub Pages on push to main
+```
 
-- 欢迎页面 (`index.html`)，含 2048 游戏跳转入口
-- 简洁风格，与 2048 游戏配色保持一致（微信小程序风格）
+## Features
 
-## 关联项目
+- **5 terminal color themes** — VSCode Dark, Dracula, Monokai, Solarized Dark, Light  
+  One-click switcher in the nav; preference saved in `localStorage`
+- **Blog** — loads from `blog/posts.json`; add posts by editing the JSON file  
+  Supports title, date, tags, description, and URL
+- **Game Center** — three fully-playable browser games with consistent terminal UI:
+  - 2048 (sliding tiles, win/lose overlays, best score)
+  - Pong (AI opponent, mouse/keyboard/touch control, speed ramp)
+  - Snake (food pulse, speed ramp, high score)
+- **Responsive layout** — works on desktop, tablet, and mobile
+- **Zero dependencies** — pure HTML / CSS / JS, no CDN, no build step
 
-| 项目 | 地址 |
-|------|------|
-| 2048 游戏 | https://cppup.github.io/games/ |
-| games 仓库 | https://github.com/cppup/games |
+## Customize Blog Posts
 
-## 部署
+Edit `blog/posts.json`:
 
-本站通过 GitHub Pages 自动部署，分支：`main`，目录：根目录（root）。
+```json
+[
+  {
+    "title": "My Post Title",
+    "date": "2025-06-01",
+    "tags": ["tag1", "tag2"],
+    "desc": "Short description shown in the card.",
+    "url": "https://link-to-full-post"
+  }
+]
+```
+
+The homepage shows the 3 most recent posts; `blog/index.html` shows all of them with tag filtering.
+
+## Deployment
+
+Push to `main` → GitHub Actions (`.github/workflows/pages.yml`) automatically deploys to GitHub Pages.
+
+No build step required — the workflow uploads the repository root directly.

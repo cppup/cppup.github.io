@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="vscode">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pong — cppup</title>
+<style>
+:root,[data-theme="vscode"]{
+  --bg:#1e1e1e;--panel:#252526;--panel2:#2d2d30;--border:#3c3c3c;
+  --text:#cccccc;--text-dim:#858585;--accent:#569cd6;--green:#4ec9b0;
+  --yellow:#dcdcaa;--orange:#ce9178;--red:#f44747;--purple:#c586c0;
+}
+[data-theme="dracula"]{
+  --bg:#282a36;--panel:#313442;--panel2:#44475a;--border:#6272a4;
+  --text:#f8f8f2;--text-dim:#6272a4;--accent:#bd93f9;--green:#50fa7b;
+  --yellow:#f1fa8c;--orange:#ffb86c;--red:#ff5555;--purple:#ff79c6;
+}
+[data-theme="monokai"]{
+  --bg:#272822;--panel:#2c2d26;--panel2:#3e3d32;--border:#75715e;
+  --text:#f8f8f2;--text-dim:#75715e;--accent:#66d9e8;--green:#a6e22e;
+  --yellow:#e6db74;--orange:#fd971f;--red:#f92672;--purple:#ae81ff;
+}
+[data-theme="solarized"]{
+  --bg:#002b36;--panel:#073642;--panel2:#0d3d4f;--border:#586e75;
+  --text:#839496;--text-dim:#586e75;--accent:#268bd2;--green:#859900;
+  --yellow:#b58900;--orange:#cb4b16;--red:#dc322f;--purple:#6c71c4;
+}
+[data-theme="light"]{
+  --bg:#fffdf7;--panel:#f5f2ec;--panel2:#ede9e0;--border:#d4cfc5;
+  --text:#3a3a3a;--text-dim:#8a8a8a;--accent:#0070c1;--green:#007f6e;
+  --yellow:#967a00;--orange:#8b4513;--red:#c00000;--purple:#7b3f9e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  transition:background 0.25s ease,color 0.25s ease;min-height:100vh;
+}
+a{color:var(--accent);text-decoration:none;transition:opacity 0.2s}
+a:hover{opacity:0.8}
+
+.topnav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;gap:1rem;padding:0.75rem 1.5rem;
+  background:var(--panel);border-bottom:1px solid var(--border);
+  transition:background 0.25s ease,border-color 0.25s ease;
+}
+.nav-brand{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.15rem;font-weight:700;color:var(--accent);white-space:nowrap;
+}
+.nav-brand .blink{animation:blink 1.1s step-end infinite;color:var(--green)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.nav-links{display:flex;gap:1.25rem;margin-left:auto}
+.nav-links a{color:var(--text-dim);font-size:0.9rem;transition:color 0.25s ease}
+.nav-links a:hover{color:var(--text)}
+.theme-switcher{display:flex;gap:0.4rem;margin-left:1rem}
+.theme-btn{
+  background:var(--panel2);border:1px solid var(--border);color:var(--text-dim);
+  font-size:0.72rem;font-family:'JetBrains Mono','Cascadia Code',Consolas,monospace;
+  padding:0.2rem 0.45rem;border-radius:3px;cursor:pointer;transition:all 0.2s ease;line-height:1.4;
+}
+.theme-btn:hover{color:var(--text);border-color:var(--accent)}
+.theme-btn.active{color:var(--accent);border-color:var(--accent);background:var(--panel)}
+
+.container{max-width:860px;margin:0 auto;padding:1.5rem 1rem}
+.back-link{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.85rem;color:var(--text-dim);margin-bottom:1rem;
+  border:1px solid var(--border);padding:0.3rem 0.75rem;border-radius:4px;transition:all 0.2s ease;
+}
+.back-link:hover{color:var(--accent);border-color:var(--accent);opacity:1}
+
+.game-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:0.75rem;
+}
+.game-title-lbl{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.4rem;font-weight:700;color:var(--accent);
+}
+.score-display{
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:1.6rem;font-weight:700;color:var(--text);
+  background:var(--panel);border:1px solid var(--border);border-radius:6px;
+  padding:0.4rem 1.5rem;letter-spacing:0.2em;
+}
+.score-display .ai-score{color:var(--red)}
+.score-display .divider{color:var(--text-dim);margin:0 0.25rem}
+.score-display .player-score{color:var(--green)}
+
+.canvas-wrap{
+  position:relative;width:100%;
+  border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;background:var(--panel);
+}
+canvas{display:block;width:100%;height:auto}
+
+.controls-hint{
+  margin-top:0.75rem;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.78rem;color:var(--text-dim);text-align:center;
+}
+
+footer{
+  margin-top:2rem;padding:1rem;text-align:center;
+  font-family:'JetBrains Mono','Cascadia Code','Fira Code',Consolas,monospace;
+  font-size:0.78rem;color:var(--text-dim);border-top:1px solid var(--border);
+}
+
+@media(max-width:480px){
+  .nav-links{display:none}
+  .container{padding:1rem 0.75rem}
+  .score-display{font-size:1.2rem;padding:0.3rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="nav-brand" href="/">cppup<span class="blink">_</span></a>
+  <div class="nav-links">
+    <a href="/#about">About</a>
+    <a href="/#blog">Blog</a>
+    <a href="/#games">Games</a>
+    <a href="https://github.com/cppup" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <div class="theme-switcher">
+    <button class="theme-btn" data-t="vscode" title="VSCode Dark">VS</button>
+    <button class="theme-btn" data-t="dracula" title="Dracula">Dr</button>
+    <button class="theme-btn" data-t="monokai" title="Monokai">Mo</button>
+    <button class="theme-btn" data-t="solarized" title="Solarized Dark">So</button>
+    <button class="theme-btn" data-t="light" title="Light">☀</button>
+  </div>
+</nav>
+
+<div class="container">
+  <a class="back-link" href="index.html">← Back</a>
+
+  <div class="game-header">
+    <div class="game-title-lbl">🏓 Pong</div>
+    <div class="score-display">
+      <span class="ai-score" id="score-ai">0</span>
+      <span class="divider">:</span>
+      <span class="player-score" id="score-player">0</span>
+    </div>
+  </div>
+
+  <div class="canvas-wrap" id="canvas-wrap">
+    <canvas id="game-canvas" width="800" height="500"></canvas>
+  </div>
+
+  <div class="controls-hint">
+    Mouse / ↑↓ Arrow keys / Touch to move · Space to start/pause · R to restart
+  </div>
+</div>
+
+<footer>© 2025 cppup · <a href="index.html">Game Center</a></footer>
+
+<script>
+// ── Theme ──────────────────────────────────────────────────────────────
+const THEME_KEY = 'cppup-theme';
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem(THEME_KEY, t);
+  document.querySelectorAll('.theme-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.t === t));
+  if (typeof drawFrame === 'function') drawFrame();
+}
+document.querySelectorAll('.theme-btn').forEach(b =>
+  b.addEventListener('click', () => applyTheme(b.dataset.t)));
+applyTheme(localStorage.getItem(THEME_KEY) || 'vscode');
+
+// ── Pong Game ──────────────────────────────────────────────────────────
+const canvas = document.getElementById('game-canvas');
+const ctx    = canvas.getContext('2d');
+const W = 800, H = 500;
+const PADDLE_W = 12, PADDLE_H = 80;
+const BALL_SIZE = 10;
+const WIN_SCORE = 7;
+const AI_SPEED = 4.5;
+const BALL_SPEED_INCREMENT = 0.25;
+const MAX_BALL_SPEED = 14;
+
+function getCSSVar(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+// Game state
+let state; // 'waiting' | 'playing' | 'paused' | 'over'
+let playerY, aiY;
+let ballX, ballY, ballVX, ballVY, ballSpeed;
+let scorePlayer, scoreAI;
+let mouseY = H / 2;
+let keysDown = {};
+let touchY = null;
+let winnerText = '';
+
+function initGame() {
+  state = 'waiting';
+  playerY = H / 2 - PADDLE_H / 2;
+  aiY     = H / 2 - PADDLE_H / 2;
+  scorePlayer = 0; scoreAI = 0;
+  resetBall();
+  updateScoreDisplay();
+}
+
+function resetBall() {
+  ballX = W / 2; ballY = H / 2;
+  ballSpeed = 5.5;
+  const ang = (Math.random() * 0.6 + 0.2) * (Math.random() < 0.5 ? 1 : -1);
+  ballVX = ballSpeed * (Math.random() < 0.5 ? 1 : -1);
+  ballVY = ballSpeed * Math.sin(Math.atan2(ang, 1));
+  ballVX = Math.sqrt(ballSpeed*ballSpeed - ballVY*ballVY) * (ballVX > 0 ? 1 : -1);
+}
+
+function updateScoreDisplay() {
+  document.getElementById('score-ai').textContent     = scoreAI;
+  document.getElementById('score-player').textContent = scorePlayer;
+}
+
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+function update() {
+  if (state !== 'playing') return;
+
+  // Player movement via keys
+  if (keysDown['ArrowUp']   || keysDown['w'] || keysDown['W'])
+    playerY = clamp(playerY - 7, 0, H - PADDLE_H);
+  if (keysDown['ArrowDown'] || keysDown['s'] || keysDown['S'])
+    playerY = clamp(playerY + 7, 0, H - PADDLE_H);
+
+  // Player movement via mouse/touch
+  if (touchY !== null) {
+    const target = touchY - PADDLE_H / 2;
+    playerY = clamp(target, 0, H - PADDLE_H);
+  } else {
+    const scaledMouseY = mouseY * (H / canvas.getBoundingClientRect().height);
+    const target = scaledMouseY - PADDLE_H / 2;
+    playerY += clamp(target - playerY, -10, 10);
+    playerY = clamp(playerY, 0, H - PADDLE_H);
+  }
+
+  // AI movement
+  const aiCenter = aiY + PADDLE_H / 2;
+  const diff = ballY - aiCenter;
+  aiY += clamp(diff * 0.08, -AI_SPEED, AI_SPEED);
+  aiY = clamp(aiY, 0, H - PADDLE_H);
+
+  // Ball movement
+  ballX += ballVX;
+  ballY += ballVY;
+
+  // Wall bounce (top/bottom)
+  if (ballY - BALL_SIZE/2 <= 0) {
+    ballY = BALL_SIZE/2;
+    ballVY = Math.abs(ballVY);
+  }
+  if (ballY + BALL_SIZE/2 >= H) {
+    ballY = H - BALL_SIZE/2;
+    ballVY = -Math.abs(ballVY);
+  }
+
+  // Player paddle (right side)
+  const PX = W - 30 - PADDLE_W;
+  if (ballVX > 0 &&
+      ballX + BALL_SIZE/2 >= PX &&
+      ballX - BALL_SIZE/2 <= PX + PADDLE_W &&
+      ballY >= playerY && ballY <= playerY + PADDLE_H) {
+    ballX = PX - BALL_SIZE/2;
+    const hitPos = (ballY - (playerY + PADDLE_H/2)) / (PADDLE_H/2);
+    const angle  = hitPos * (Math.PI / 4);
+    ballSpeed = Math.min(ballSpeed + BALL_SPEED_INCREMENT, MAX_BALL_SPEED);
+    ballVX = -ballSpeed * Math.cos(angle);
+    ballVY =  ballSpeed * Math.sin(angle);
+  }
+
+  // AI paddle (left side)
+  const AX = 30;
+  if (ballVX < 0 &&
+      ballX - BALL_SIZE/2 <= AX + PADDLE_W &&
+      ballX + BALL_SIZE/2 >= AX &&
+      ballY >= aiY && ballY <= aiY + PADDLE_H) {
+    ballX = AX + PADDLE_W + BALL_SIZE/2;
+    const hitPos = (ballY - (aiY + PADDLE_H/2)) / (PADDLE_H/2);
+    const angle  = hitPos * (Math.PI / 4);
+    ballSpeed = Math.min(ballSpeed + BALL_SPEED_INCREMENT, MAX_BALL_SPEED);
+    ballVX =  ballSpeed * Math.cos(angle);
+    ballVY =  ballSpeed * Math.sin(angle);
+  }
+
+  // Scoring
+  if (ballX < 0) {
+    scorePlayer++;
+    updateScoreDisplay();
+    if (scorePlayer >= WIN_SCORE) { state = 'over'; winnerText = 'You Win!'; return; }
+    state = 'waiting'; resetBall();
+  }
+  if (ballX > W) {
+    scoreAI++;
+    updateScoreDisplay();
+    if (scoreAI >= WIN_SCORE) { state = 'over'; winnerText = 'AI Wins!'; return; }
+    state = 'waiting'; resetBall();
+  }
+}
+
+function drawFrame() {
+  const bg      = getCSSVar('--bg');
+  const panel   = getCSSVar('--panel');
+  const border  = getCSSVar('--border');
+  const textDim = getCSSVar('--text-dim');
+  const accent  = getCSSVar('--accent');
+  const green   = getCSSVar('--green');
+  const red     = getCSSVar('--red');
+  const textCol = getCSSVar('--text');
+
+  ctx.fillStyle = panel;
+  ctx.fillRect(0, 0, W, H);
+
+  // Faint scanline overlay
+  for (let y = 0; y < H; y += 4) {
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, y, W, 2);
+  }
+
+  // Center dashed line
+  ctx.save();
+  ctx.setLineDash([8, 8]);
+  ctx.strokeStyle = textDim;
+  ctx.globalAlpha = 0.3;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke();
+  ctx.restore();
+
+  // AI paddle (left)
+  ctx.fillStyle = red;
+  ctx.fillRect(30, aiY, PADDLE_W, PADDLE_H);
+
+  // Player paddle (right)
+  ctx.fillStyle = green;
+  ctx.fillRect(W - 30 - PADDLE_W, playerY, PADDLE_W, PADDLE_H);
+
+  // Ball
+  ctx.fillStyle = accent;
+  ctx.fillRect(ballX - BALL_SIZE/2, ballY - BALL_SIZE/2, BALL_SIZE, BALL_SIZE);
+
+  // Overlay messages
+  if (state === 'waiting') {
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = textCol;
+    ctx.font = 'bold 22px JetBrains Mono, Consolas, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('Press SPACE to start', W/2, H/2);
+  } else if (state === 'paused') {
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = textCol;
+    ctx.font = 'bold 22px JetBrains Mono, Consolas, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED — Press SPACE to resume', W/2, H/2);
+  } else if (state === 'over') {
+    ctx.fillStyle = 'rgba(0,0,0,0.7)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = winnerText.startsWith('You') ? green : red;
+    ctx.font = 'bold 36px JetBrains Mono, Consolas, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(winnerText, W/2, H/2 - 20);
+    ctx.fillStyle = textDim;
+    ctx.font = '18px JetBrains Mono, Consolas, monospace';
+    ctx.fillText('Press R to restart', W/2, H/2 + 24);
+  }
+
+  // Player/AI labels
+  ctx.fillStyle = textDim;
+  ctx.font = '12px JetBrains Mono, Consolas, monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText('AI', 30, 18);
+  ctx.textAlign = 'right';
+  ctx.fillText('YOU', W - 30, 18);
+}
+
+let rafId;
+function gameLoop() {
+  update();
+  drawFrame();
+  rafId = requestAnimationFrame(gameLoop);
+}
+
+// ── Input ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  keysDown[e.key] = true;
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (state === 'waiting') state = 'playing';
+    else if (state === 'playing') state = 'paused';
+    else if (state === 'paused') state = 'playing';
+  }
+  if (e.key === 'r' || e.key === 'R') initGame();
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') e.preventDefault();
+});
+document.addEventListener('keyup', e => { keysDown[e.key] = false; });
+
+const wrap = document.getElementById('canvas-wrap');
+wrap.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseY = (e.clientY - rect.top) * (H / rect.height);
+  touchY = null;
+});
+
+wrap.addEventListener('touchmove', e => {
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  touchY = (e.touches[0].clientY - rect.top) * (H / rect.height);
+}, {passive:false});
+wrap.addEventListener('touchend', () => { touchY = null; });
+
+wrap.addEventListener('click', () => {
+  if (state === 'waiting') state = 'playing';
+  else if (state === 'playing') state = 'paused';
+  else if (state === 'paused') state = 'playing';
+});
+
+initGame();
+gameLoop();
+</script>
+</body>
+</html>
