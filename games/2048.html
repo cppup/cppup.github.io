@@ -333,8 +333,6 @@ function move(dir) {
     return merged;
   });
 
-  for (let i = 0; i < (4 - rotations) % 4; i++)
-    b = rotateRight(newBoard), b = b; // scope trick below:
   let result = newBoard;
   for (let i = 0; i < (4 - rotations) % 4; i++) result = rotateRight(result);
 

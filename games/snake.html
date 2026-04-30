@@ -356,7 +356,8 @@ const DIRS = {
 document.addEventListener('keydown', e => {
   if (e.key === ' ') {
     e.preventDefault();
-    if (state === 'waiting' || state === 'over') { if (state === 'over') initGame(); state = 'playing'; }
+    if (state === 'over') { initGame(); state = 'playing'; }
+    else if (state === 'waiting') { state = 'playing'; }
     else if (state === 'playing') state = 'paused';
     else if (state === 'paused') state = 'playing';
     return;
