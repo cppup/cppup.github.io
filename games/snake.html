@@ -183,21 +183,27 @@ const canvas  = document.getElementById('game-canvas');
 const ctx     = canvas.getContext('2d');
 const COLS = 20, ROWS = 20, CELL = 25;
 const BEST_KEY = 'snake-best';
+const INITIAL_TICK_MS = 150;
+const MIN_TICK_MS = 60;
+const TICK_DECREASE_MS = 15;
+const SPEED_INCREASE_INTERVAL = 5;
 
 let snake, dir, nextDir, food, score, best, state, tickInterval, foodEaten;
 let foodPulse = 0;  // for food animation (0-2*PI)
 let lastTime = 0;
-let tickMs = 150;
+let tickMs = INITIAL_TICK_MS;
 
 function getCSSVar(n) {
   return getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 }
 
 function initGame() {
-  snake = [{x:4,y:10},{x:3,y:10},{x:2,y:10}]; // head first, moving right
+  const startX = Math.floor(COLS / 2) - 1;
+  const startY = Math.floor(ROWS / 2);
+  snake = [{x:startX+1,y:startY},{x:startX,y:startY},{x:startX-1,y:startY}]; // head first, moving right
   dir = {x:1,y:0}; nextDir = {x:1,y:0};
   score = 0; foodEaten = 0;
-  tickMs = 150;
+  tickMs = INITIAL_TICK_MS;
   best = parseInt(localStorage.getItem(BEST_KEY) || '0', 10);
   state = 'waiting';
   placeFood();
@@ -238,8 +244,8 @@ function tick() {
     if (score > best) { best = score; localStorage.setItem(BEST_KEY, best); }
     updateScoreDisplay();
     placeFood();
-    // Speed up every 5 food items
-    if (foodEaten % 5 === 0) tickMs = Math.max(60, tickMs - 15);
+    // Speed up every SPEED_INCREASE_INTERVAL food items
+    if (foodEaten % SPEED_INCREASE_INTERVAL === 0) tickMs = Math.max(MIN_TICK_MS, tickMs - TICK_DECREASE_MS);
   } else {
     snake.pop();
   }

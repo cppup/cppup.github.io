@@ -397,9 +397,10 @@ function render(newPos, hadMerge) {
       tile.style.height = rect.height + 'px';
       tile.style.top    = (rect.top  - wRect.top)  + 'px';
       tile.style.left   = (rect.left - wRect.left) + 'px';
-      // Font size based on digits
+      // Font size based on number of digits
+      const digitFontSizes = {1: '1.5rem', 2: '1.5rem', 3: '1.2rem', 4: '0.95rem'};
       const digits = String(val).length;
-      tile.style.fontSize = digits <= 2 ? '1.5rem' : digits === 3 ? '1.2rem' : '0.95rem';
+      tile.style.fontSize = digitFontSizes[digits] || '0.8rem';
       if (newPos && newPos[0] === r && newPos[1] === c) tile.classList.add('new');
       wrapEl.appendChild(tile);
     }

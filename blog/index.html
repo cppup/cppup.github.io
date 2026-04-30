@@ -235,8 +235,8 @@ async function loadBlog() {
     allPosts = await res.json();
     if (!allPosts.length) throw new Error('empty');
 
-    // Sort by date descending
-    allPosts.sort((a, b) => b.date.localeCompare(a.date));
+    // Sort by date descending (YYYY-MM-DD format)
+    allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     buildTagFilter();
     filteredPosts = [...allPosts];
