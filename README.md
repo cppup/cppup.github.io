@@ -9,6 +9,9 @@ Terminal-themed personal homepage with responsive layout, 5 color schemes, blog 
 ```
 /
 ├── index.html              # Homepage (about · blog preview · game center)
+├── entry/
+│   ├── index.html          # Immersive scene-based entry prototype
+│   └── scene-config.js     # Hotspot mapping + future photo/3D adapter hooks
 ├── blog/
 │   ├── index.html          # Full blog listing with tag filter
 │   └── posts.json          # Blog posts data (add your own entries here)
@@ -25,6 +28,7 @@ Terminal-themed personal homepage with responsive layout, 5 color schemes, blog 
 
 - **5 terminal color themes** — VSCode Dark, Dracula, Monokai, Solarized Dark, Light  
   One-click switcher in the nav; preference saved in `localStorage`
+- **Immersive entry portal** — `/entry/` scene-driven interactive portal with keyboard-focusable hotspots and mobile fallback cards
 - **Blog** — loads from `blog/posts.json`; add posts by editing the JSON file  
   Supports title, date, tags, description, and URL
 - **Game Center** — three fully-playable browser games with consistent terminal UI:
