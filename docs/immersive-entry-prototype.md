@@ -1,27 +1,25 @@
 # Immersive entry prototype
 
-This prototype adds a scene-driven portal at `/entry/`, with a dual-mode “Quiet / Active” upgrade that keeps the site feel cohesive while making the experience more like a game-like 3D entrance.
+The `/entry/` route is a dual-scene portal (Quiet/Active) designed as a lightweight 2.5D interactive entry for the site.
 
-## Dual-scene design
+## This round: 3D redesign (converged pass)
 
-- **Quiet**: minimal, clean workstation view with snowy mountain silhouettes outside the glass and a tidy Apple-like desk setup.
-- **Active**: same room composition, but the window reveals skiers moving through the snow, adding motion without requiring a full 3D engine.
-- Both scenes preserve the same five entry points and keep the same site links for continuity.
+Compared with the previous flat prototype, this pass strengthens depth and material feeling while preserving route behavior:
 
-## 3D / depth strategy
+- Added **multi-layer cinematic depth**: sky/background, mountain distance layers, window plane, desk/object foreground, and final vignette.
+- Added **realistic light structure**: volumetric warm lamp glow, glass reflections, frame contact shadows, ambient occlusion near desk/floor contact.
+- Improved **surface quality cues**: desk sheen, stronger object cast shadows, monitor and arcade mass separation.
+- Kept **Quiet/Active scene toggle** and retained Active skier traversal in the window.
+- Kept **hotspots anchored in object space** (`front/mid/back` depth with z-offset) instead of pure flat UI overlay.
 
-- Layered scene depth: background mountains, midground window frame, foreground desk and monitor.
-- Parallax via pointer movement, but limited to a small angular range to keep the interaction lightweight.
-- Hotspots are anchored as object-based markers in the scene rather than floating in a flat overlay panel.
-- Motion control is reduced automatically when `prefers-reduced-motion` is enabled.
+## Interaction and fallback strategy
 
-## Dynamic motion and performance
+- Pointer-based subtle camera/parallax remains enabled in normal mode.
+- `prefers-reduced-motion: reduce` disables animation/transition effects.
+- Mobile still uses a dedicated card list fallback (not desktop hard-scale).
+- Keyboard accessibility remains: Tab focus + arrow-key cycling across hotspots.
 
-- Skiers in the Active scene are intentionally simple CSS keyframe sprites, not heavy 3D or skeletal systems.
-- Only a few layers receive transforms per pointer event, so the page stays responsive on moderate hardware.
-- The scene uses CSS transitions and light animation to preserve visual polish while keeping GPU load controlled.
-
-## Hotspot and link mapping
+## Hotspot mapping (unchanged)
 
 | Hotspot | Link target | Role |
 | --- | --- | --- |
@@ -31,16 +29,10 @@ This prototype adds a scene-driven portal at `/entry/`, with a dual-mode “Quie
 | Snake Cartridge | `/games/snake.html` | Direct game deep-link |
 | Source Repository | `https://github.com/cppup/cppup.github.io` | Open repository |
 
-## Low-performance / mobile / motion reduction strategy
+## Upgrade path (photo -> scene / generated 3D)
 
-- Mobile devices do not receive the large desktop scene; they fall back to a simpler card list of the same hotspots.
-- Reduced motion mode disables the parallax and animation loops to keep the experience calm and accessible.
-- The scene default remains Quiet to reduce unnecessary motion and keep the page stable while loading.
+The `entry/scene-config.js` schema remains the adapter seam:
 
-## Future photo -> scene / 3D asset integration suggestions
-
-The current provider remains `procedural`, but its data structure is isolated so future replacements are straightforward:
-
-1. **Photo-derived scene**: feed the same hotspot schema plus a scene background/placement map generated from a desk photo or multi-view set.
-2. **3D asset flow (e.g. worldlabs.ai pipeline)**: export a lightweight GLB/GLTF asset and translate object anchors into the same hotspot overlay positions.
-3. **Runtime strategy**: keep a `quiet` / `active` switch and a provider flag (`procedural` / `photo` / `generated3d`) so the rendering layer can evolve without changing site links.
+1. **Photo-derived pipeline**: infer object anchors and depth layers from desk/window photos and output the same hotspot coordinates.
+2. **Generated-3D pipeline** (worldlabs.ai or other tools): export GLB/GLTF + object anchor map, project anchors into the same hotspot runtime.
+3. **Runtime compatibility**: keep `quiet/active` mode semantics and current hotspot IDs/links stable so visuals can evolve without navigation regressions.
