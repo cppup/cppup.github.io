@@ -1,12 +1,25 @@
 # Immersive entry prototype
 
-This prototype adds a scene-driven portal at `/entry/`, designed as a game-like entry to the existing website sections.
+This prototype adds a scene-driven portal at `/entry/`, with a dual-mode “Quiet / Active” upgrade that keeps the site feel cohesive while making the experience more like a game-like 3D entrance.
 
-## Design approach
+## Dual-scene design
 
-- Use a lightweight **2.5D procedural desk scene** (pure HTML/CSS/JS) for fast loading and broad compatibility.
-- Keep interactive zones in `entry/scene-config.js` as structured hotspot data.
-- Render desktop as a scene overlay with clickable hotspots; render mobile as a dedicated hotspot card list (instead of shrinking desktop visuals).
+- **Quiet**: minimal, clean workstation view with snowy mountain silhouettes outside the glass and a tidy Apple-like desk setup.
+- **Active**: same room composition, but the window reveals skiers moving through the snow, adding motion without requiring a full 3D engine.
+- Both scenes preserve the same five entry points and keep the same site links for continuity.
+
+## 3D / depth strategy
+
+- Layered scene depth: background mountains, midground window frame, foreground desk and monitor.
+- Parallax via pointer movement, but limited to a small angular range to keep the interaction lightweight.
+- Hotspots are anchored as object-based markers in the scene rather than floating in a flat overlay panel.
+- Motion control is reduced automatically when `prefers-reduced-motion` is enabled.
+
+## Dynamic motion and performance
+
+- Skiers in the Active scene are intentionally simple CSS keyframe sprites, not heavy 3D or skeletal systems.
+- Only a few layers receive transforms per pointer event, so the page stays responsive on moderate hardware.
+- The scene uses CSS transitions and light animation to preserve visual polish while keeping GPU load controlled.
 
 ## Hotspot and link mapping
 
@@ -18,10 +31,16 @@ This prototype adds a scene-driven portal at `/entry/`, designed as a game-like 
 | Snake Cartridge | `/games/snake.html` | Direct game deep-link |
 | Source Repository | `https://github.com/cppup/cppup.github.io` | Open repository |
 
+## Low-performance / mobile / motion reduction strategy
+
+- Mobile devices do not receive the large desktop scene; they fall back to a simpler card list of the same hotspots.
+- Reduced motion mode disables the parallax and animation loops to keep the experience calm and accessible.
+- The scene default remains Quiet to reduce unnecessary motion and keep the page stable while loading.
+
 ## Future photo -> scene / 3D asset integration suggestions
 
-The current provider is `procedural`. It can be replaced without changing page routing:
+The current provider remains `procedural`, but its data structure is isolated so future replacements are straightforward:
 
-1. **Photo-derived scene**: build a photo-to-layout adapter that outputs background layers + hotspot placements and writes into the same hotspot schema (`id`, `href`, `placement`, `description`).
-2. **3D asset flow (e.g. worldlabs.ai pipeline)**: export GLB/GLTF + camera setup, then mount a viewer adapter via `adapters.generated3d.entry` and project 3D anchors onto 2D hotspot overlays.
-3. **Runtime strategy**: keep a provider flag (`procedural` / `photo` / `generated3d`) and preserve the mobile card fallback path for low-end devices and accessibility reliability.
+1. **Photo-derived scene**: feed the same hotspot schema plus a scene background/placement map generated from a desk photo or multi-view set.
+2. **3D asset flow (e.g. worldlabs.ai pipeline)**: export a lightweight GLB/GLTF asset and translate object anchors into the same hotspot overlay positions.
+3. **Runtime strategy**: keep a `quiet` / `active` switch and a provider flag (`procedural` / `photo` / `generated3d`) so the rendering layer can evolve without changing site links.

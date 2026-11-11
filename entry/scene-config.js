@@ -1,9 +1,11 @@
 window.CPPUP_ENTRY_SCENE = {
-  version: "prototype-v1",
+  version: "prototype-v2",
   provider: "procedural",
   scene: {
-    id: "desk-window-v1",
-    description: "Procedural desk scene used as placeholder for future photo/3D pipelines."
+    id: "desk-window-dual-mode",
+    description: "Quiet/Active dual-scene prototype with parallax and skiers in active state.",
+    modes: ["quiet", "active"],
+    defaultMode: "quiet"
   },
   hotspots: [
     {
@@ -53,7 +55,7 @@ window.CPPUP_ENTRY_SCENE = {
       enabled: false,
       entry: "",
       expectedInput: "single-desk-photo-or-multi-view-set",
-      expectedOutput: "scene background and hotspot placement map"
+      expectedOutput: "quiet/active scene pair and hotspot placement map"
     },
     generated3d: {
       enabled: false,
